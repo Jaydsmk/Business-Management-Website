@@ -2,9 +2,9 @@ import { gql } from 'apollo-server';
 
 const typeDefs = gql`
   type Topping {
-    id: ObjectID!
     name: String!
     priceCents: Int!
+    id: ObjectID!
   }
 
   type Query {

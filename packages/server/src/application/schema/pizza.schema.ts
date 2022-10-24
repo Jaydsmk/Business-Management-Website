@@ -2,10 +2,11 @@ import { gql } from 'apollo-server';
 
 const typeDefs = gql`
   type Pizza {
-    id: ObjectID!
+    toppings: [Topping!]!
     name: String!
+    id: ObjectID!
     description: String!
-    toppingIds: [String]!
+    toppingIds: [String!]!
     imgSrc: String!
   }
 
