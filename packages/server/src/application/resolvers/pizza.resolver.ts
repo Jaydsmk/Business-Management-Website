@@ -2,7 +2,7 @@
 import { pizzaProvider } from '../providers';
 import { Pizza as PizzaSchema } from '../schema/types/schema';
 
-export type Pizza = Omit<PizzaSchema, 'toppings'>;
+export type Pizza = Omit<PizzaSchema, 'toppings'> & { toppingIds: string[] };
 
 const pizzaResolver = {
   Query: {
