@@ -1,6 +1,7 @@
-import { Pizza, CreateToppingInput, DeleteToppingInput, Topping, UpdateToppingInput } from '../schema/types/schema';
+import { CreateToppingInput, DeleteToppingInput, Topping, UpdateToppingInput } from '../schema/types/schema';
 import { Root } from '../schema/types/types';
 import { toppingProvider } from '../providers';
+import { Pizza } from './pizza.resolver';
 
 const toppingResolver = {
   Query: {

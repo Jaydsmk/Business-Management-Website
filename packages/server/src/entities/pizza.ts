@@ -1,7 +1,16 @@
+import { ObjectId } from 'bson';
 import { Document } from 'mongodb';
 import { Pizza } from '../application/providers/pizzas/pizza.provider.types';
 
-interface PizzaDocument extends Document, Omit<Pizza, 'id'> {}
+export interface PizzaDocument extends Document, Omit<PizzaData, 'toppingIds' | 'id'> {}
+
+export interface PizzaData {
+  id: string;
+  name: string;
+  description: string;
+  toppingIds: string[];
+  imgSrc: string;
+}
 
 const toPizzaObject = (pizza: PizzaDocument): Pizza => {
   return {
@@ -9,9 +18,8 @@ const toPizzaObject = (pizza: PizzaDocument): Pizza => {
     name: pizza.name,
     description: pizza.description,
     toppingIds: pizza.toppingIds,
-    // toppings: pizza.toppings,
     imgSrc: pizza.imgSrc,
   };
 };
 
-export { PizzaDocument, toPizzaObject };
+export { toPizzaObject };
