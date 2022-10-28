@@ -1,5 +1,8 @@
+// import { Schema } from 'inspector';
 import { pizzaProvider } from '../providers';
-import { Pizza } from '../schema/types/schema';
+import { Pizza as PizzaSchema } from '../schema/types/schema';
+
+export type Pizza = Omit<PizzaSchema, 'toppings'> & { toppingIds: string[] };
 
 const pizzaResolver = {
   Query: {
