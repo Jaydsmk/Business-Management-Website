@@ -7,6 +7,7 @@ const typeDefs = gql`
     id: ObjectID!
     description: String!
     imgSrc: String!
+    priceCents: Int!
   }
 
   type Query {

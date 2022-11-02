@@ -35,7 +35,7 @@ const PizzaList: React.FC = () => {
 
   return (
     <div>
-      {getError ? displayErr : null}
+      {getError ? displayErr : ''}
       {pizzaList}
     </div>
   );
