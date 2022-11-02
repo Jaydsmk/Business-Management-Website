@@ -1,3 +1,4 @@
+import internal from 'stream';
 import { Topping } from './schema';
 
 export interface Pizza {
@@ -7,4 +8,5 @@ export interface Pizza {
   toppingIds: string;
   toppings: [Topping];
   imgSrc: string;
+  priceCents: number;
 }

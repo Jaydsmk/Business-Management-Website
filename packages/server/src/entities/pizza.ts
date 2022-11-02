@@ -1,4 +1,3 @@
-import { ObjectId } from 'bson';
 import { Document } from 'mongodb';
 import { Pizza } from '../application/providers/pizzas/pizza.provider.types';
 
