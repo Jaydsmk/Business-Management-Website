@@ -3,10 +3,10 @@ import { PizzaDocument, toPizzaObject } from '../../../entities/pizza';
 import { Pizza } from './pizza.provider.types';
 import { CreatePizzaInput, UpdatePizzaInput } from 'src/application/schema/types/schema';
 import validateStringInputs from '../../../lib/string-validator';
-import { toppingProvider } from '..';
+import { ToppingProvider } from '../toppings/topping.provider';
 
 class PizzaProvider {
-  constructor(private collection: Collection<PizzaDocument>) {}
+  constructor(private collection: Collection<PizzaDocument>, private toppingProvider: ToppingProvider) {}
 
   public async getPizzas(): Promise<Pizza[]> {
     const pizzas = await this.collection.find().sort({ name: 1 }).toArray();
@@ -53,7 +53,7 @@ class PizzaProvider {
     if (imgSrc) validateStringInputs(imgSrc);
     if (toppingIds) {
       validateStringInputs(toppingIds);
-      toppingProvider.validateToppings(toppingIds);
+      this.toppingProvider.validateToppings(toppingIds);
     }
 
     const data = await this.collection.findOneAndUpdate(

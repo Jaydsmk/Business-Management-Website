@@ -12,7 +12,7 @@ export interface Pizza {
 export interface CreatePizzaInput {
   name: string;
   description: string;
-  toppingIds: ObjectId[];
+  toppingIds: string[];
   imgSrc: string;
 }
 
@@ -20,6 +20,6 @@ export interface UpdatePizzaInput {
   id: string;
   name?: string | null;
   description?: string | null;
-  toppingIds?: ObjectId[] | null;
+  toppingIds?: string[] | null;
   imgSrc?: string | null;
 }
