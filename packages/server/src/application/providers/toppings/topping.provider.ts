@@ -16,6 +16,9 @@ class ToppingProvider {
       .find({ _id: { $in: toppingIds } })
       .sort({ name: 1 })
       .toArray();
+
+    // console.log(topping)
+
     return topping.map(toToppingObject);
   }
 
@@ -25,6 +28,17 @@ class ToppingProvider {
       .map((eachTopping) => eachTopping.priceCents)
       .reduce((acc, curr) => acc + curr, 0);
     return toppingsPriceTotal;
+  }
+
+  public async validateToppings(toppingIds: string[]): Promise<void> {
+    const existToppings = toppingIds.map((id) => new ObjectId(id));
+    const topping = await this.collection
+      .find({ _id: { $in: existToppings } })
+      .sort({ name: 1 })
+      .toArray();
+    if (toppingIds.length !== topping.length) {
+      throw new Error(`Could not validate the ${topping} topping`);
+    }
   }
 
   public async createTopping(input: CreateToppingInput): Promise<Topping> {
