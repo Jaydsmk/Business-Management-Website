@@ -38,7 +38,6 @@ describe('pizzaProvider', (): void => {
 
   describe('createPizza', (): void => {
     const validPizza = createMockPizzaDocument();
-    // const validPizza = createMockPizzaDocument({ name: 'test topping', priceCents: 12345 });
 
     beforeEach(() => {
       reveal(stubPizzaCollection).findOneAndUpdate.mockImplementation(() => ({ value: validPizza }));

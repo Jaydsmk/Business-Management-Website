@@ -1,4 +1,3 @@
-import internal from 'stream';
 import { Topping } from './schema';
 
 export interface Pizza {
