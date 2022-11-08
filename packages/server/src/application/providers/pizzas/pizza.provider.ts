@@ -51,10 +51,8 @@ class PizzaProvider {
     if (name) validateStringInputs(name);
     if (description) validateStringInputs(description);
     if (imgSrc) validateStringInputs(imgSrc);
-    if (toppingIds) {
-      validateStringInputs(toppingIds);
-      this.toppingProvider.validateToppings(toppingIds);
-    }
+
+    if (toppingIds) this.toppingProvider.validateToppings(toppingIds);
 
     const data = await this.collection.findOneAndUpdate(
       { _id: new ObjectId(id) },
