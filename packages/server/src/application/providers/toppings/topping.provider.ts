@@ -23,10 +23,11 @@ class ToppingProvider {
   }
 
   public async getPriceCents(toppingIds: string[]): Promise<Number> {
+    const basePrice = Number(process.env.BASE_PRICE_CENTS);
     const eachToppings = await this.getToppingsByIds(toppingIds);
-    const toppingsPriceTotal = eachToppings
-      .map((eachTopping) => eachTopping.priceCents)
-      .reduce((acc, curr) => acc + curr, 0);
+    const toppingsPriceTotal =
+      basePrice + eachToppings.map((eachTopping) => eachTopping.priceCents).reduce((acc, curr) => acc + curr, 0);
+
     return toppingsPriceTotal;
   }
 
