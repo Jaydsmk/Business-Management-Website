@@ -29,9 +29,11 @@ const PizzaList: React.FC = () => {
   );
 
   if (loading) {
-    <div>
-      <CardItemSkeleton data-testid="pizza-list-loading" />
-    </div>;
+    return (
+      <div>
+        <CardItemSkeleton data-testid="pizza-list-loading" />
+      </div>
+    );
   }
 
   const pizzaList = data?.pizzas.map((pizza: Pizza) => (
@@ -60,4 +62,4 @@ const PizzaList: React.FC = () => {
   );
 };
 
-export { PizzaList };
+export default PizzaList;
