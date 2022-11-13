@@ -35,7 +35,7 @@ const PizzaItem: React.FC<PizzaItemProps> = ({ pizza, handleOpen, ...props }) =>
   const classes = useStyles();
 
   return (
-    <ListItem {...props} className={classes.container}>
+    <ListItem {...props} className={classes.container} data-testid={`pizza-item-${pizza?.id}`}>
       <div data-testid={`pizza-img-${pizza?.id}`}>
         <img src={pizza?.imgSrc ?? MakePizzaImg} alt="" className={classes.img} />
       </div>
