@@ -14,6 +14,7 @@ import {
   Theme,
   InputLabel,
 } from '@material-ui/core';
+import defPizzaImg from '../../assets/img/default-pizza.jpeg';
 import { useFormik, Field, Formik } from 'formik';
 
 import usePizzaMutations from '../../hooks/pizza/use-pizza-mutations';
@@ -29,16 +30,59 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'center',
     },
+
     paper: {
+      display: 'flex',
+      flexDirection: 'column',
+      width: '350px',
+      alignItems: 'center',
+      justifyContent: 'center',
       backgroundColor: theme.palette.background.paper,
       boxShadow: theme.shadows[5],
       padding: theme.spacing(1, 4, 3, 5),
     },
-    root: {
+
+    formRoot: {
       '& .MuiTextField-root': {
-        margin: theme.spacing(5),
+        margin: theme.spacing(1.2),
+        width: '32ch',
+      },
+      '& .MuiSelect-root': {
+        backgroundColor: '#ebc0c0',
+        border: '1px solid none',
+        borderRadius: '5px',
+        margin: theme.spacing(1, 2, 2, 3),
+        padding: theme.spacing(2),
         width: '25ch',
       },
+      '& .MuiSelect-icon': {
+        fontSize: 40,
+        marginRight: '30px',
+        top: 'calc(33%)',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottom: `2px solid #ebc0c0`,
+      },
+      '& .MuiButtonBase-root': {
+        margin: theme.spacing(0.5, 1, 0, 1),
+        '& svg': {
+          fontSize: 35,
+          color: '#5e6cb3d6',
+        },
+      },
+    },
+
+    img: {
+      marginTop: '10px',
+      width: '350px',
+      height: '250px',
+      objectFit: 'cover',
+      borderRadius: '5px',
+    },
+
+    inputLabel: {
+      fontSize: '12px',
+      padding: theme.spacing(1, 1, 0, 1),
     },
   })
 );
@@ -50,7 +94,6 @@ interface PizzaModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   toppingList?: any;
 }
-
 interface FormValues {
   name: string;
   description: string;
@@ -104,8 +147,6 @@ const PizzaModal = ({ selectedPizza, open, setOpen }: PizzaModalProps): JSX.Elem
     >
       <Fade in={open}>
         <Paper className={classes.paper}>
-          <h2>{selectedPizza ? 'Edit' : 'Add'} Pizza</h2>
-
           <Formik
             initialValues={initialValues}
             onSubmit={(values: FormValues): void => {
@@ -114,7 +155,12 @@ const PizzaModal = ({ selectedPizza, open, setOpen }: PizzaModalProps): JSX.Elem
               console.log('formik values: ', values);
             }}
           >
-            <form onSubmit={formik.handleSubmit} className={classes.root} noValidate autoComplete="off">
+            <form onSubmit={formik.handleSubmit} className={classes.formRoot} noValidate autoComplete="off">
+              {selectedPizza ? (
+                <img className={classes.img} src={formik.values.imgSrc} />
+              ) : (
+                <img className={classes.img} src={defPizzaImg} />
+              )}
               <Field
                 component={TextField}
                 id="name"
@@ -137,29 +183,6 @@ const PizzaModal = ({ selectedPizza, open, setOpen }: PizzaModalProps): JSX.Elem
                 onBlur={formik.handleBlur}
               />
 
-              <InputLabel>Toppings</InputLabel>
-              <Field
-                component={Select}
-                label="Pizza Toppings"
-                multiple
-                value={formik.values.toppingIds}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                inputProps={{ name: 'toppingIds', id: 'toppingIds' }}
-                renderValue={(selected: any): React.ReactNode => {
-                  return data?.toppings
-                    .filter((topping: Topping) => selected.includes(topping.id))
-                    .map((topping: Topping) => <p key={topping.name}> - {topping.name}</p>);
-                }}
-                defaultValue={selectedPizza?.toppings}
-              >
-                {data?.toppings.map((topping: Topping) => (
-                  <MenuItem value={topping.id} key={topping.id}>
-                    {topping.name}
-                  </MenuItem>
-                ))}
-              </Field>
-
               <Field
                 component={TextField}
                 id="imgSrc"
@@ -171,21 +194,47 @@ const PizzaModal = ({ selectedPizza, open, setOpen }: PizzaModalProps): JSX.Elem
                 onBlur={formik.handleBlur}
               />
 
+              <InputLabel className={classes.inputLabel}>Toppings</InputLabel>
+              <Field
+                component={Select}
+                label="Pizza Toppings"
+                multiple
+                value={formik.values.toppingIds}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                inputProps={{ name: 'toppingIds', id: 'toppingIds' }}
+                renderValue={(selected: any): React.ReactNode => {
+                  return data?.toppings
+                    .filter((topping: Topping) => selected.includes(topping.id))
+                    .map((topping: Topping) => <p key={topping.name}>{topping.name}</p>);
+                }}
+                defaultValue={selectedPizza?.toppings}
+              >
+                {data?.toppings.map((topping: Topping) => (
+                  <MenuItem value={topping.id} key={topping.id}>
+                    {topping.name}
+                  </MenuItem>
+                ))}
+              </Field>
+
               <IconButton edge="end" aria-label="update" type="button" onClick={formik.submitForm}>
                 <AddCircle />
               </IconButton>
-
-              <IconButton
-                edge="end"
-                aria-label="delete"
-                type="button"
-                onClick={(): void => {
-                  onDeletePizza(selectedPizza);
-                  setOpen(false);
-                }}
-              >
-                <Delete />
-              </IconButton>
+              {selectedPizza ? (
+                <IconButton
+                  edge="end"
+                  aria-label="delete"
+                  type="button"
+                  onClick={(): void => {
+                    onDeletePizza(selectedPizza);
+                    setOpen(false);
+                  }}
+                >
+                  <Delete />
+                </IconButton>
+              ) : (
+                ''
+              )}
             </form>
           </Formik>
         </Paper>

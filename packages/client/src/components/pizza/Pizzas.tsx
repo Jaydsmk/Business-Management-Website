@@ -5,9 +5,8 @@ import PizzaList from './PizzaList';
 
 const Pizzas: React.FC = () => {
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="lg">
       <PageHeader pageHeader={'Pizzas'} />
-      {/* <img alt="under-construction" src="./codingcat.jpeg" /> */}
       <PizzaList />
     </Container>
   );
