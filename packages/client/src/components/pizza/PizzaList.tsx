@@ -1,4 +1,5 @@
 import { useQuery } from '@apollo/client';
+import { Box, Grid } from '@material-ui/core';
 import React, { useState } from 'react';
 import { GET_PIZZAS } from '../../hooks/graphql/pizza/queries/get-pizzas';
 import { Pizza } from '../../types/pizza';
@@ -43,12 +44,15 @@ const PizzaList: React.FC = () => {
   const toppingList = data?.toppings;
 
   return (
-    <>
+    <Box sx={{ flexGrow: 1 }}>
       <div>
         {getError ? displayErr : ''}
-        <PizzaItem key="add-pizza" handleOpen={handleOpen} />
-        {pizzaList}
+        <Grid container spacing={6}>
+          <PizzaItem key="add-pizza" handleOpen={handleOpen} />
+          {pizzaList}
+        </Grid>
       </div>
+
       <div>
         <PizzaModal
           selectedPizza={selectedPizza}
@@ -58,7 +62,7 @@ const PizzaList: React.FC = () => {
           toppingList={toppingList}
         />
       </div>
-    </>
+    </Box>
   );
 };
 

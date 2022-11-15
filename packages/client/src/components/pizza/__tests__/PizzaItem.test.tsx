@@ -12,9 +12,8 @@ describe('PizzaItem', () => {
 
     return {
       ...view,
-
       $getItem: () => screen.getByTestId(/^pizza-item/),
-      $getModifyButton: () => screen.getByRole('button'),
+      $getModifyButton: () => screen.getByTestId(/^pizza-modifyBtn/),
     };
   };
 
