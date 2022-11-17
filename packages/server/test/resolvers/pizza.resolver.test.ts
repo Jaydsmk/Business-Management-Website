@@ -20,6 +20,12 @@ jest.mock('../../src/application/database', () => ({
 
 const mockTopping = createMockTopping();
 const mockPizza = createMockPizza();
+const mockCursorResult = {
+  results: [mockPizza],
+  totalCount: 1,
+  hasNextPage: false,
+  cursor: mockPizza.id.toString(),
+};
 
 beforeAll(async (): Promise<void> => {
   client = new TestClient(typeDefs, resolvers);
@@ -34,39 +40,50 @@ describe('pizzaResolver', (): void => {
     describe('pizzas', () => {
       const query = gql`
         query getPizzas {
-          pizzas {
-            id
-            name
-            description
-            toppings {
-              name
-              priceCents
+          pizzas(input: { cursor: "", limit: 1 }) {
+            results {
               id
+              name
+              description
+              toppings {
+                name
+                priceCents
+                id
+              }
+              imgSrc
+              priceCents
             }
-            imgSrc
-            priceCents
+            totalCount
+            hasNextPage
+            cursor
           }
         }
       `;
       test('should get all pizzas', async () => {
-        jest.spyOn(pizzaProvider, 'getPizzas').mockResolvedValue([mockPizza]);
+        jest.spyOn(pizzaProvider, 'getPizzas').mockResolvedValue(mockCursorResult);
         jest.spyOn(toppingProvider, 'getToppingsByIds').mockResolvedValue([mockTopping]);
         jest.spyOn(toppingProvider, 'getPriceCents').mockResolvedValue(mockTopping.priceCents);
 
         const result = await client.query({ query });
 
         expect(result.data).toEqual({
-          pizzas: [
-            {
-              __typename: 'Pizza',
-              id: mockPizza.id,
-              name: mockPizza.name,
-              description: mockPizza.description,
-              toppings: await toppingProvider.getToppingsByIds(mockPizza.toppingIds),
-              priceCents: await toppingProvider.getPriceCents(mockPizza.toppingIds),
-              imgSrc: mockPizza.imgSrc,
-            },
-          ],
+          pizzas: {
+            __typename: 'GetPizzasResponse',
+            totalCount: 1,
+            hasNextPage: false,
+            cursor: mockPizza.id.toString(),
+            results: [
+              {
+                __typename: 'Pizza',
+                id: mockPizza.id,
+                name: mockPizza.name,
+                description: mockPizza.description,
+                toppings: await toppingProvider.getToppingsByIds(mockPizza.toppingIds),
+                priceCents: await toppingProvider.getPriceCents(mockPizza.toppingIds),
+                imgSrc: mockPizza.imgSrc,
+              },
+            ],
+          },
         });
         expect(pizzaProvider.getPizzas).toHaveBeenCalledTimes(1);
       });

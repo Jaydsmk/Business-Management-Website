@@ -12,7 +12,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    pizzas: [Pizza!]!
+    pizzas(input: QueryInput!): GetPizzasResponse!
   }
 
   type Mutation {
