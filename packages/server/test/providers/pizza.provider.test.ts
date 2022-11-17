@@ -3,14 +3,16 @@ import { Collection } from 'mongodb';
 import { reveal, stub } from 'jest-auto-stub';
 import { PizzaProvider } from '../../src/application/providers/pizzas/pizza.provider';
 import { ToppingProvider } from '../../src/application/providers/toppings/topping.provider';
-import { mockSortToArray } from '../helpers/mongo.helper';
+import { mockSortSkipLimitToArray, mockSortToArray, mockToArray } from '../helpers/mongo.helper';
 import { createMockPizzaDocument } from '../helpers/pizza.helper';
 import { createMockToppingDocument } from '../helpers/topping.helper';
 import { PizzaDocument, toPizzaObject } from '../../src/entities/pizza';
+import { CursorProvider } from '../../src/application/providers/cursor/cursor.provider';
 
 const stubPizzaCollection = stub<Collection<PizzaDocument>>();
 const stubToppingProvider = stub<ToppingProvider>();
-const pizzaProvider = new PizzaProvider(stubPizzaCollection, stubToppingProvider);
+const cursorProvider = new CursorProvider(stubPizzaCollection);
+const pizzaProvider = new PizzaProvider(stubPizzaCollection, stubToppingProvider, cursorProvider);
 
 beforeEach(jest.clearAllMocks);
 
@@ -21,18 +23,27 @@ describe('pizzaProvider', (): void => {
 
   describe('getPizzas', (): void => {
     beforeEach(() => {
-      reveal(stubPizzaCollection).find.mockImplementation(mockSortToArray([mockPizzaDocument]));
+      reveal(stubPizzaCollection)
+        .find.mockImplementationOnce(mockSortToArray([mockPizzaDocument]))
+        .mockImplementationOnce(mockToArray([mockPizzaDocument]))
+        .mockImplementationOnce(mockSortSkipLimitToArray([mockPizzaDocument]));
     });
-    test('should call find once', async () => {
-      await pizzaProvider.getPizzas();
+    test('should call find once', () => {
+      pizzaProvider.getPizzas({ cursor: '', limit: 1 });
 
       expect(stubPizzaCollection.find).toHaveBeenCalledTimes(1);
     });
 
     test('should get all pizzas', async () => {
-      const result = await pizzaProvider.getPizzas();
+      const result = await pizzaProvider.getPizzas({ cursor: '', limit: 1 });
+      const expectCursorResult = {
+        results: [mockPizza],
+        totalCount: 1,
+        hasNextPage: false,
+        cursor: '',
+      };
 
-      expect(result).toEqual([mockPizza]);
+      expect(result).toEqual(expectCursorResult);
     });
   });
 

@@ -1,13 +1,21 @@
 import { pizzaProvider } from '../providers';
-import { DeletePizzaInput, UpdatePizzaInput, CreatePizzaInput, Pizza as PizzaSchema } from '../schema/types/schema';
+import {
+  DeletePizzaInput,
+  UpdatePizzaInput,
+  CreatePizzaInput,
+  Pizza as PizzaSchema,
+  GetPizzasResponse as PizzaResSchema,
+  QueryInput,
+} from '../schema/types/schema';
 import { Root } from '../schema/types/types';
 
 export type Pizza = Omit<PizzaSchema, 'toppings' | 'priceCents'> & { toppingIds: string[] };
+export type GetPizzasResponse = Omit<PizzaResSchema, 'results'> & { results: Pizza[] };
 
 const pizzaResolver = {
   Query: {
-    pizzas: async (): Promise<Pizza[]> => {
-      return pizzaProvider.getPizzas();
+    pizzas: async (_: Root, args: { input: QueryInput }): Promise<GetPizzasResponse> => {
+      return pizzaProvider.getPizzas(args.input);
     },
   },
 
