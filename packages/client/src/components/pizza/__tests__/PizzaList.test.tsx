@@ -26,7 +26,12 @@ describe('PizzaList', () => {
         return response(
           context.data({
             loading: false,
-            pizzas: [...data],
+            pizzas: {
+              results: [...data],
+              totalCount: 1,
+              hasNextPage: false,
+              cursor: '',
+            },
           })
         );
       })
@@ -34,6 +39,9 @@ describe('PizzaList', () => {
   };
 
   beforeEach(() => {
+    // const pizza = createTestPizza();
+    // mockPizzaQuery([pizza]);
+
     const pizza1 = createTestPizza();
     const pizza2 = createTestPizza();
     mockPizzaQuery([pizza1, pizza2]);

@@ -1,5 +1,8 @@
 import { useQuery } from '@apollo/client';
-import { Box, Grid } from '@material-ui/core';
+import { Box, Grid, IconButton } from '@material-ui/core';
+import { makeStyles, Theme } from '@material-ui/core/styles';
+import { DoubleArrow } from '@material-ui/icons';
+
 import React, { useState } from 'react';
 import { GET_PIZZAS } from '../../hooks/graphql/pizza/queries/get-pizzas';
 import { Pizza } from '../../types/pizza';
@@ -7,8 +10,44 @@ import CardItemSkeleton from '../common/CardItemSkeleton';
 import { PizzaItem } from './PizzaItem';
 import PizzaModal from './pizzaModal';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  btnContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    margin: '10px',
+  },
+
+  loadMoreBtn: {
+    transform: 'rotate(90deg)',
+    '& svg': {
+      fontSize: 40,
+      color: '#84415C',
+      textAlign: 'center',
+      animation: `$blinkArrow 1s ${theme.transitions.easing.easeInOut} infinite`,
+    },
+  },
+
+  '@keyframes blinkArrow': {
+    '0%': {
+      opacity: 1,
+    },
+    '100%': {
+      opacity: 0,
+    },
+  },
+}));
+
 const PizzaList: React.FC = () => {
-  const { loading, data, error } = useQuery(GET_PIZZAS);
+  const classes = useStyles();
+
+  const { loading, data, error, fetchMore } = useQuery(GET_PIZZAS, {
+    variables: {
+      input: {
+        cursor: '',
+        limit: 5,
+      },
+    },
+  });
   const [getError, setGetError] = useState(false);
 
   const [open, setOpen] = React.useState(false);
@@ -37,7 +76,7 @@ const PizzaList: React.FC = () => {
     );
   }
 
-  const pizzaList = data?.pizzas.map((pizza: Pizza) => (
+  const pizzaList = data?.pizzas.results.map((pizza: Pizza) => (
     <PizzaItem data-testid={`pizza-item-${pizza?.id}`} key={pizza.id} pizza={pizza} handleOpen={handleOpen} />
   ));
 
@@ -52,6 +91,38 @@ const PizzaList: React.FC = () => {
           {pizzaList}
         </Grid>
       </div>
+
+      {data?.pizzas.hasNextPage && (
+        <div className={classes.btnContainer}>
+          <IconButton
+            edge="end"
+            aria-label="loadMore"
+            className={classes.loadMoreBtn}
+            onClick={(): void => {
+              const cursorId = data?.pizzas.results[data?.pizzas.results.length - 1].id;
+
+              fetchMore({
+                variables: {
+                  input: {
+                    limit: 6,
+                    cursor: cursorId,
+                  },
+                },
+                updateQuery: (prevCursorResult: any, { fetchMoreResult }) => {
+                  fetchMoreResult.pizzas.results = [
+                    ...prevCursorResult.pizzas.results,
+                    ...fetchMoreResult.pizzas.results,
+                  ];
+
+                  return fetchMoreResult ? fetchMoreResult : prevCursorResult;
+                },
+              });
+            }}
+          >
+            <DoubleArrow />
+          </IconButton>
+        </div>
+      )}
 
       <div>
         <PizzaModal
