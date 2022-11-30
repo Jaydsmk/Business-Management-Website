@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { AppBar, Toolbar } from '@material-ui/core';
+import HomePizzaImg from '../assets/img/home.jpeg';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -41,11 +42,7 @@ const Nav = (): JSX.Element | null => {
       <Toolbar className={classes.root}>
         <div className={classes.linkContainer}>
           <NavLink className={classes.link} to="/">
-            <img
-              alt="samurai-pizza-cats"
-              className={classes.logo}
-              src={'https://i.pinimg.com/564x/34/50/56/345056b367f0934aa86b5e21dee6f1de.jpg'}
-            />
+            <img alt="samurai-pizza-cats" className={classes.logo} src={HomePizzaImg} />
           </NavLink>
           <NavLink className={classes.link} to="/pizzas">
             Pizzas

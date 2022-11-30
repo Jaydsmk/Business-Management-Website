@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import { makeStyles, Theme } from '@material-ui/core';
+import HomePizzaImg from '../assets/img/home.jpeg';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -15,9 +16,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   img: {
     position: 'absolute',
-    width: '100%',
     zIndex: -1,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
   },
+
   link: {
     textDecoration: 'none',
     fontWeight: 700,
@@ -45,11 +49,7 @@ const Home = (): JSX.Element => {
           Toppings
         </NavLink>
       </div>
-      <img
-        alt="samurai-pizza-cats"
-        className={classes.img}
-        src="https://img5.goodfon.com/original/2500x1280/e/f1/minimalizm-stil-fon-art-art-style-background-illustration--4.jpg"
-      />
+      <img alt="samurai-pizza-cats" className={classes.img} src={HomePizzaImg} />
     </div>
   );
 };
